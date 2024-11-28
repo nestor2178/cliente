@@ -48,7 +48,7 @@ const Login = () => {
     } else if (err.status === 401) {
       setErrMsg("No autorizado");
     } else {
-      setErrMsg(err.data?.message || "Unknown error");
+      setErrMsg(err.data?.message || "Error desconocido");
     }
     errRef.current?.focus();
   };
