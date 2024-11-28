@@ -15,7 +15,7 @@ interface RootState {
   };
 }
 const baseQuery = fetchBaseQuery({
-  baseUrl: "http://localhost:1000",
+  baseUrl: "http://localhost:10000",
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth.token;
