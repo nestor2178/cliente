@@ -15,7 +15,7 @@ interface RootState {
   };
 }
 const baseQuery = fetchBaseQuery({
-  baseUrl: "https://servidor-7zli.onrender.com",
+  baseUrl: "http://localhost:3500",
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth.token;

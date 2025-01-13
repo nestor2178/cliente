@@ -1,38 +1,39 @@
 import { apiSlice } from "../../app/api/ApiSlice";
 import { logOut, setCredentials } from "./authSlice";
 
+interface LoginResponse {
+    accessToken: string;
+}
+
+interface RefreshResponse {
+    accessToken: string;
+}
+
 export const authApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        login: builder.mutation({
+        login: builder.mutation<LoginResponse, { username: string; password: string }>({
             query: (credentials) => ({
                 url: '/auth',
                 method: 'POST',
-                body: { ...credentials }
+                body: { ...credentials },
             }),
         }),
-        sendLogout: builder.mutation({
+        sendLogout: builder.mutation<void, void>({
             query: () => ({
                 url: '/auth/logout',
                 method: 'POST',
             }),
             async onQueryStarted(_, { dispatch, queryFulfilled }) {
                 try {
-                    const { data } = await queryFulfilled;
-                    // La solicitud fue exitosa, realizar acciones adicionales
-                    console.log(data);
+                    await queryFulfilled;
                     dispatch(logOut({}));
-
-                    setTimeout(() => {
-                        dispatch(apiSlice.util.resetApiState());
-                    }, 1000);
+                    dispatch(apiSlice.util.resetApiState());
                 } catch (err) {
-                    // Manejar el error aquí
                     console.error("Error al cerrar sesión:", err);
                 }
-            }
+            },
         }),
-
-        refresh: builder.mutation({
+        refresh: builder.mutation<RefreshResponse, void>({
             query: () => ({
                 url: '/auth/refresh',
                 method: 'GET',
@@ -40,15 +41,13 @@ export const authApiSlice = apiSlice.injectEndpoints({
             async onQueryStarted(_, { dispatch, queryFulfilled }) {
                 try {
                     const { data } = await queryFulfilled;
-                    // La solicitud fue exitosa, realizar acciones adicionales
-                    console.log(data);
                     const { accessToken } = data;
                     dispatch(setCredentials({ accessToken }));
                 } catch (err) {
-                    // Manejar el error aquí
                     console.error("Error al actualizar el token:", err);
+                    dispatch(logOut({})); // Opcional: Forzar logout si falla
                 }
-            }
+            },
         }),
     }),
 });
@@ -58,4 +57,5 @@ export const {
     useSendLogoutMutation,
     useRefreshMutation,
 } = authApiSlice;
+
 export { setCredentials };

@@ -26,7 +26,7 @@ const UsersList = () => {
     let errMsg: string;
 
     if ('data' in error) {
-      errMsg = (error.data as { message?: string })?.message || "Error desconocido";
+      errMsg = (error.data as { message?: string })?.message || "Unknown error";
     } else if ('error' in error) {
       errMsg = error.error;
     } else {

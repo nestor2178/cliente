@@ -28,60 +28,47 @@ const PersistLogin = () => {
     }] = useRefreshMutation()
 
     useEffect(() => {
-        if (effectRan.current === true || process.env.NODE_ENV !== "development") {
-            const verifyRefreshToken = async () => {
-                console.log("verificando token de actualización");
-                try {
-                    await refresh({});
-                    setTrueSuccess(true);
-                } catch (err) {
-                    console.error(err);
-                }
-            };
+        console.log("useEffect ran with:", { token, persist, isUninitialized, isLoading, isSuccess });
 
-            if (!token && persist) verifyRefreshToken();
+        const verifyRefreshToken = async () => {
+            console.log("Intentando renovar token");
+            try {
+                const response = await refresh().unwrap();
+                setTrueSuccess(true);
+                console.log("Token renovado con éxito:", response);
+            } catch (err) {
+                console.error("Error al renovar token:", err);
+            }
+        };
+
+        if (!token && persist) {
+            verifyRefreshToken();
+        } else {
+            //console.log("No es necesario renovar el token:", { token, persist });
         }
 
-        return () => {
-            effectRan.current = true;
-        };
+        effectRan.current = true;
     }, [token, persist, refresh]);
 
     let content;
     if (!persist) {
-        console.log("no persist");
         content = <Outlet />;
     } else if (isLoading) {
-        console.log("loading");
         content = <PulseLoader color={"#FFF"} />;
     } else if (isError) {
-        console.log("error");
-
-        if ("data" in error) {
-            const errorMessage = (error as CustomError).data.message;
-            content = (
-                <p className="errmsg">
-                    {`${errorMessage} - `}
-                    <Link to="/login">Por favor inicie sesión nuevamente</Link>.
-                </p>
-            );
-        } else {
-            content = (
-                <p className="errmsg">
-                    {`An error occurred - `}
-                    <Link to="/login">Por favor inicie sesión nuevamente</Link>.
-                </p>
-            );
-        }
-    } else if (isSuccess && trueSuccess) {
-        console.log("success");
-        content = <Outlet />;
-    } else if (token && isUninitialized) {
-        console.log("token and uninit");
+        content = (
+            <p className="errmsg">
+                {error && "data" in error
+                    ? (error as CustomError).data.message
+                    : "An error occurred"} - <Link to="/login">Por favor inicie sesión nuevamente</Link>.
+            </p>
+        );
+    } else if (token || (isSuccess && trueSuccess)) {
         content = <Outlet />;
     }
 
     return content;
+
 };
 
 export default PersistLogin;

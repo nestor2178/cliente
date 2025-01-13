@@ -45,6 +45,8 @@ const Welcome = () => {
           <Link to="/dash/users/new">Agregar nuevo usuario</Link>
         </p>
       )}
+
+      <p> <Link to="/dash/search">Búsqueda avanzada</Link> {/* Nueva opción de búsqueda avanzada */} </p>
     </section>
   );
 

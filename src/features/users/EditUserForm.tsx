@@ -1,4 +1,3 @@
-//EditUserForm.tsx
 import { useState, useEffect } from "react";
 import { useUpdateUserMutation, useDeleteUserMutation } from "./UsersApiSlice";
 import { useNavigate } from "react-router-dom";
@@ -37,7 +36,7 @@ const EditUserForm: React.FC<EditUserFormProps> = ({ user }) => {
   const [validUsername, setValidUsername] = useState(false);
   const [password, setPassword] = useState("");
   const [validPassword, setValidPassword] = useState(false);
-  const [roles, setRoles] = useState(user.roles || []);
+  const [role, setRole] = useState(user.roles[0] || "Employee"); // Usamos 'role' en singular
   const [active, setActive] = useState(user.active);
 
   useEffect(() => {
@@ -52,7 +51,7 @@ const EditUserForm: React.FC<EditUserFormProps> = ({ user }) => {
     if (isSuccess || isDelSuccess) {
       setUsername("");
       setPassword("");
-      setRoles([]);
+      setRole("Employee");
       navigate("/dash/users");
     }
   }, [isSuccess, isDelSuccess, navigate]);
@@ -61,23 +60,17 @@ const EditUserForm: React.FC<EditUserFormProps> = ({ user }) => {
     setUsername(e.target.value);
   const onPasswordChanged = (e: React.ChangeEvent<HTMLInputElement>) =>
     setPassword(e.target.value);
-
-  const onRolesChanged = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const values = Array.from(
-      e.target.selectedOptions,
-      (option) => (option as HTMLOptionElement).value
-    );
-    setRoles(values);
-  };
+  const onRoleChanged = (e: React.ChangeEvent<HTMLSelectElement>) =>
+    setRole(e.target.value);
 
   const onActiveChanged = () => setActive((prev) => !prev);
 
-  const onSaveUserClicked = async () => {
+  const onSaveUserClicked = async (_e: React.MouseEvent<HTMLButtonElement>) => {
     try {
       if (password) {
-        await updateUser({ id: user.id, username, password, roles, active });
+        await updateUser({ id: user.id, username, password, roles: [role], active });
       } else {
-        await updateUser({ id: user.id, username, roles, active });
+        await updateUser({ id: user.id, username, roles: [role], active });
       }
     } catch (error) {
       console.error("Error updating user:", error);
@@ -92,7 +85,7 @@ const EditUserForm: React.FC<EditUserFormProps> = ({ user }) => {
     }
   };
 
-  const options = Object.values(ROLES).map((role) => (
+  const roleOptions = Object.values(ROLES).map((role) => (
     <option key={role} value={role}>
       {translateRole(role)}
     </option>
@@ -100,16 +93,16 @@ const EditUserForm: React.FC<EditUserFormProps> = ({ user }) => {
 
   let canSave;
   if (password) {
-    canSave = roles.length > 0 && validUsername && validPassword && !isLoading;
+    canSave = validUsername && validPassword && !isLoading;
   } else {
-    canSave = roles.length > 0 && validUsername && !isLoading;
+    canSave = validUsername && !isLoading;
   }
 
   const errClass = isError || isDelError ? "errmsg" : "offscreen";
   const validUserClass = !validUsername ? "form__input--incomplete" : "";
   const validPwdClass =
     password && !validPassword ? "form__input--incomplete" : "";
-  const validRolesClass = roles.length === 0 ? "form__input--incomplete" : "";
+  const validRoleClass = !role ? "form__input--incomplete" : "";
 
   const getErrorMessage = (error: FetchBaseQueryError | undefined) => {
     if (error && "data" in error && typeof error.data === "object" && error.data !== null) {
@@ -189,19 +182,17 @@ const EditUserForm: React.FC<EditUserFormProps> = ({ user }) => {
           />
         </label>
 
-        <label
-          className="form__label form__checkbox-container"
-          htmlFor="roles">
+        <label className="form__label" htmlFor="roles">
           FUNCIONES ASIGNADAS:
         </label>
         <select
           id="roles"
           name="roles"
-          className={`form__select ${validRolesClass}`}
-          value={roles}
-          onChange={onRolesChanged}
+          className={`form__select ${validRoleClass}`}
+          value={role}
+          onChange={onRoleChanged}
         >
-          {options}
+          {roleOptions}
         </select>
       </form>
     </>

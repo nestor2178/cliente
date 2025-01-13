@@ -1,3 +1,4 @@
+// Note.tsx
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
@@ -67,7 +68,7 @@ const Note = ({ noteId }: NoteProps) => {
   } else return null;
 };
 
-// Memoización del componente Note
+// Memorización del componente Note
 const memoizedNote = memo(Note);
 
 export default memoizedNote;

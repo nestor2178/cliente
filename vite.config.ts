@@ -5,13 +5,8 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 10000, // Esto solo afecta el entorno local
-    host: "0.0.0.0", // Exponer servidor a la red local
+    port: 8000, // Cambia esto al puerto que desees
+    host: "0.0.0.0", // Esto expone el servidor a la red local
     open: true,
   },
-  build: {
-    outDir: "dist", // Directorio donde se generan los archivos de producción
-    sourcemap: false, // Opcional: desactiva los mapas de origen para producción
-  },
-  base: "./", // Si se sirve desde la raíz. Ajustar si Render usa una subruta
 });

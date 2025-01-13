@@ -1,5 +1,4 @@
-//Login.tsx
-import { useRef, useState, useEffect, SetStateAction } from "react";
+import { useRef, useState, useEffect, ChangeEvent, FormEvent } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "./authSlice";
@@ -9,7 +8,7 @@ import useTitle from "../../hooks/useTitle";
 import PulseLoader from "react-spinners/PulseLoader";
 
 const Login = () => {
-  useTitle("Employee Login");
+  useTitle("Inicio de sesión de empleados");
 
   const userRef = useRef<HTMLInputElement>(null);
   const errRef = useRef<HTMLParagraphElement>(null);
@@ -24,9 +23,7 @@ const Login = () => {
   const [login, { isLoading }] = useLoginMutation();
 
   useEffect(() => {
-    if (userRef.current) {
-      userRef.current.focus();
-    }
+    userRef.current?.focus();
   }, []);
 
   useEffect(() => {
@@ -42,9 +39,9 @@ const Login = () => {
 
   const handleErrors = (err: ErrorResponse) => {
     if (!err.status) {
-      setErrMsg("No Server Response");
+      setErrMsg("No hay respuesta del servidor");
     } else if (err.status === 400) {
-      setErrMsg("Missing Username or Password");
+      setErrMsg("Falta usuario o contraseña");
     } else if (err.status === 401) {
       setErrMsg("No autorizado");
     } else {
@@ -53,7 +50,7 @@ const Login = () => {
     errRef.current?.focus();
   };
 
-  const handleSubmit = async (e: { preventDefault: () => void }) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
       const { accessToken } = await login({ username, password }).unwrap();
@@ -66,10 +63,12 @@ const Login = () => {
     }
   };
 
-  const handleUserInput = (e: { target: { value: SetStateAction<string> } }) =>
+  const handleUserInput = (e: ChangeEvent<HTMLInputElement>) =>
     setUsername(e.target.value);
-  const handlePwdInput = (e: { target: { value: SetStateAction<string> } }) =>
+
+  const handlePwdInput = (e: ChangeEvent<HTMLInputElement>) =>
     setPassword(e.target.value);
+
   const handleToggle = () => setPersist((prev) => !prev);
 
   const errClass = errMsg ? "errmsg" : "offscreen";
@@ -124,7 +123,7 @@ const Login = () => {
         </form>
       </main>
       <footer>
-        <Link to="/" className="btn btn-primary">Pagina Inicio</Link>
+        <Link to="/" className="btn btn-primary">Página de inicio</Link>
       </footer>
     </section>
   );

@@ -34,6 +34,7 @@ const DashHeader = () => {
   const onNewUserClicked = () => navigate("/dash/users/new");
   const onNotesClicked = () => navigate("/dash/notes");
   const onUsersClicked = () => navigate("/dash/users");
+  const onLogoutClicked = () => sendLogout(); // Envoltura para la función `sendLogout`
 
   let dashClass = null;
   if (!DASH_REGEX.test(pathname) && !NOTES_REGEX.test(pathname) && !USERS_REGEX.test(pathname)) {
@@ -82,16 +83,15 @@ const DashHeader = () => {
     <button
       className="btn btn-danger"
       title="Cerrar sesión"
-      onClick={sendLogout}
+      onClick={onLogoutClicked}
       disabled={isLoading}
     >
       <FontAwesomeIcon icon={faRightFromBracket} />
     </button>
   );
+
   const goBackButton = (
-    <button className="btn btn-danger"
-      title="Regresar"
-      onClick={onGoBackClicked}>
+    <button className="btn btn-danger" title="Regresar" onClick={onGoBackClicked}>
       <FontAwesomeIcon icon={faRightFromBracket} style={{ transform: "rotate(180deg)" }} />
     </button>
   );

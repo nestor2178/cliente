@@ -9,6 +9,7 @@ import { disableReactDevTools } from "@fvilers/disable-react-devtools";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
 
+
 // Deshabilita las herramientas de desarrollo de React en producción
 if (process.env.NODE_ENV === "production") disableReactDevTools();
 
