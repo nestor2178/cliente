@@ -1,14 +1,11 @@
 // frontend/src/types/types.ts
 
-import { ReactNode } from "react";
-
 /**
  * Tipos relacionados con las notas
  */
 export type NoteStatus = 'Abierta' | 'Completada' | 'En progreso' | 'Archivada';
 export interface Note {
-  username: any;
-  _id: ReactNode;
+  _id: string; // Antes: ReactNode
   id: string;
   title: string;
   text: string;
@@ -17,8 +14,11 @@ export interface Note {
   createdAt: string;
   updatedAt: string;
   createdBy: string;
-  tags?: string[]; // Campo opcional para etiquetas
-  priority?: 'Baja' | 'Media' | 'Alta'; // Campo opcional para prioridad
+  userId: string;
+  completed: boolean;
+  username?: string; // Opcional y tipado correctamente
+  tags?: string[];
+  priority?: 'Baja' | 'Media' | 'Alta';
 }
 
 /**
