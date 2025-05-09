@@ -13,9 +13,10 @@ import NewNote from "./features/notes/NewNote";
 import Prefetch from "./features/auth/Prefetch";
 import PersistLogin from "./features/auth/PersistLogin";
 import RequireAuth from "./features/auth/RequireAuth";
-import AdvancedSearch from "./features/notes/AdvancedSearch"; // Importa el componente de búsqueda avanzada
+import AdvancedSearch from "./features/notes/AdvancedSearch"; 
 import { ROLES } from "./config/roles";
 import useTitle from "./hooks/useTitle";
+import PrintableNoteWrapper from "./features/notes/PrintableNoteWrapper";
 
 function App() {
   useTitle("MC Tecnologias");
@@ -52,6 +53,7 @@ function App() {
                   <Route index element={<NotesList />} />
                   <Route path=":id" element={<EditNote />} />
                   <Route path="new" element={<NewNote />} />
+                  <Route path="print/:id" element={<PrintableNoteWrapper />} />
                 </Route>
 
                 <Route path="search" element={<AdvancedSearch />} /> {/* Nueva ruta para la búsqueda avanzada */}

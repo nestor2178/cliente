@@ -1,74 +1,69 @@
-// Note.tsx
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import { useGetNotesQuery } from "./notesApiSlice";
 import { memo } from "react";
+import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-// Definición de la interfaz Note
-interface Note {
-  id: string;
-  title: string;
-  text: string;
-  createdAt: string;
-  updatedAt: string;
-  username: string;
-  completed: boolean;
-}
-
-// Definición de la interfaz NoteProps
+// Definir tipos explícitos para las props
 interface NoteProps {
-  noteId: string;
+  noteId: string;  // `noteId` es un string
 }
 
-// Componente Note
 const Note = ({ noteId }: NoteProps) => {
   const { note } = useGetNotesQuery("notesList", {
     selectFromResult: ({ data }) => ({
-      note: data?.entities[noteId] as Note | undefined,
+      note: data?.entities[noteId],
     }),
   });
 
   const navigate = useNavigate();
 
-  if (note) {
-    const created = new Date(note.createdAt).toLocaleString("es-CO", {
-      day: "numeric",
-      month: "long",
-    });
+  if (!note) return null;
 
-    const updated = new Date(note.updatedAt).toLocaleString("es-CO", {
-      day: "numeric",
-      month: "long",
-    });
+  const created = new Date(note.createdAt).toLocaleString("es-CO");
+  const updated = new Date(note.updatedAt).toLocaleString("es-CO");
 
-    const handleEdit = () => navigate(`/dash/notes/${noteId}`);
+  const handleEdit = () => navigate(`/dash/notes/${noteId}`);
 
-    return (
+  return (
+    <>
+      {/* Contenido visible en la tabla */}
       <tr className="table__row">
         <td className="table__cell note__status">
-          {note.completed ? (
-            <span className="note__status--completed">Terminada</span>
-          ) : (
-            <span className="note__status--open">Abierta</span>
-          )}
+          {note.completed ? "Completada" : "Pendiente"}
         </td>
         <td className="table__cell note__created">{created}</td>
         <td className="table__cell note__updated">{updated}</td>
         <td className="table__cell note__title">{note.title}</td>
         <td className="table__cell note__username">{note.username}</td>
-
-        <td className="table__cell">
+        <td className="table__cell note__edit">
           <button className="icon-button table__button" onClick={handleEdit}>
-            <FontAwesomeIcon icon={faPenToSquare} />
+          <FontAwesomeIcon icon={faPenToSquare} />
           </button>
         </td>
       </tr>
-    );
-  } else return null;
+    </>
+  );
 };
 
-// Memorización del componente Note
-const memoizedNote = memo(Note);
+// Contenido oculto para impresión (deberías manejarlo en el componente padre)
+// O puedes crear un componente separado para esto
+export const NotePrintContent = ({ note }: { note: any }) => {
+  const created = new Date(note.createdAt).toLocaleString("es-CO");
+  const updated = new Date(note.updatedAt).toLocaleString("es-CO");
 
+  return (
+    <div id={`note-content-${note._id}`} className="note-print hidden">
+      <h2>{note.title}</h2>
+      <p>{note.text}</p>
+      <small>Creada: {created}</small><br />
+      <small>Actualizada: {updated}</small><br />
+      <small>Autor: {note.username}</small>
+      <hr />
+    </div>
+  );
+};
+
+// Memorizar el componente si es necesario, pero puede eliminarse si no se necesita optimización
+const memoizedNote = memo(Note);
 export default memoizedNote;

@@ -41,8 +41,9 @@ const DashHeader = () => {
     dashClass = "dash-header__container--small";
   }
 
+  // SOLUCIÓN: Mostrar el botón en cualquier subruta de /dash/notes
   let newNoteButton = null;
-  if (NOTES_REGEX.test(pathname)) {
+  if (pathname.startsWith("/dash/notes")) {
     newNoteButton = (
       <button className="btn btn-primary" title="Nueva Nota" onClick={onNewNoteClicked}>
         <FontAwesomeIcon icon={faFileCirclePlus} />
