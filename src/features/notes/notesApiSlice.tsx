@@ -12,6 +12,7 @@ interface Note {
   updatedAt: string;
   createdBy: string;
   username: string;
+  userId: string;
   completed: boolean;
   priority?: 'Baja' | 'Media' | 'Alta';
   tags?: string[];
@@ -66,9 +67,10 @@ export const notesApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: (_result, _error, arg) => [{ type: 'Note', id: arg.id }]
     }),
     deleteNote: builder.mutation({
-      query: (id) => ({
-        url: `/notes/${id}`,
-        method: 'DELETE'
+  query: (id) => ({
+    url: 'notes',
+    method: 'DELETE',
+    body: { id }
       }),
       invalidatesTags: (_result, _error, id) => [{ type: 'Note', id }]
     })

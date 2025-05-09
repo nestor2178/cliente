@@ -75,9 +75,9 @@ const EditNoteForm = ({ note, users }: EditNoteFormProps) => {
   const onDeleteNoteClicked = async () => {
     if (window.confirm("¿Estás seguro de eliminar esta nota?")) {
       try {
-        await deleteNote({ id: note.id }).unwrap();
+        await deleteNote(note.id).unwrap();
       } catch (err) {
-        console.error("Failed to delete note:", err);
+        console.error("Error al eliminar la nota:", err);
       }
     }
   };
