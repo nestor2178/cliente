@@ -41,7 +41,7 @@ const AdvancedSearch: React.FC = () => {
 
         try {
             const query = new URLSearchParams(criteria as Record<string, string>).toString();
-            const response = await fetch(`hhttps://servidor-7zli.onrender.com/notes/search?${query}`, {
+            const response = await fetch(`https://servidor-7zli.onrender.com/notes/search?${query}`, {
                 method: 'GET',
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
