@@ -23,8 +23,8 @@ const NewNoteForm: React.FC<NewNoteFormProps> = ({ users }) => {
   const [text, setText] = useState("");
   const [userId, setUserId] = useState(users[0]?.id || "");
 
-  const TITLE_REGEX = /^[A-z0-9\s]{3,20}$/;
-  const TEXT_REGEX = /^[A-z0-9\s!@#$%.,?]{10,100}$/;
+  const TITLE_REGEX = /^[A-z0-9\s!@#$%.,?]{3,60}$/;
+  const TEXT_REGEX = /^[A-z0-9\s!@#$%.,?():"'/-]{10,1000}$/;
 
   const [validTitle, setValidTitle] = useState(false);
   const [validText, setValidText] = useState(false);
@@ -109,29 +109,46 @@ const NewNoteForm: React.FC<NewNoteFormProps> = ({ users }) => {
           </div>
         </div>
         <label className="form__label" htmlFor="title">
-          Titulo:
-        </label>
-        <input
-          className={`form__input ${validTitleClass}`}
-          id="title"
-          name="title"
-          type="text"
-          autoComplete="off"
-          value={title}
-          onChange={onTitleChanged}
-        />
-
+  Título:
+  {!validTitle && (
+    <span className="form__error">
+      {" "}
+      [3-60 caracteres. Solo letras, números y espacios]
+    </span>
+  )}
+</label>
+<input
+  className={`form__input ${validTitleClass}`}
+  id="title"
+  name="title"
+  type="text"
+  autoComplete="off"
+  value={title}
+  onChange={onTitleChanged}
+  minLength={3}
+  maxLength={60}
+  required
+/>
         <label className="form__label" htmlFor="text">
-          Texto:
-          {!validText && <span className="form__error"> [10-100 caracteres, incluidos !@#$%.,?]</span>}
-        </label>
-        <textarea
-          className={`form__input form__input--text ${validTextClass}`}
-          id="text"
-          name="text"
-          value={text}
-          onChange={onTextChanged}
-        />
+  Texto:
+  {!validText && (
+    <span className="form__error">
+      {" "}
+      [10-1000 caracteres. Permitidos: letras, números, espacios, !@#$%.,?"'-()]
+    </span>
+  )}
+</label>
+<textarea
+  className={`form__input form__input--text ${validTextClass}`}
+  id="text"
+  name="text"
+  value={text}
+  onChange={onTextChanged}
+  minLength={10}
+  maxLength={1000}
+  required
+/>
+
 
         <label className="form__label" htmlFor="username">
           ASIGNADO A:

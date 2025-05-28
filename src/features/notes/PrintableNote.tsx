@@ -1,5 +1,5 @@
-import React from 'react';
-import { Note } from '../../types/types';
+import React from "react";
+import { Note } from "../../types/types";
 
 interface PrintableNoteProps {
   note: Note;
@@ -8,12 +8,12 @@ interface PrintableNoteProps {
   buttonLabel?: string;
 }
 
-const PrintableNote: React.FC<PrintableNoteProps> = ({ 
-  note, 
-  buttonLabel = "Imprimir"
+const PrintableNote: React.FC<PrintableNoteProps> = ({
+  note,
+  buttonLabel = "Imprimir",
 }) => {
   const handlePrint = () => {
-    const printWindow = window.open('', '_blank');
+    const printWindow = window.open("", "_blank");
     if (!printWindow) return;
 
     printWindow.document.write(`
@@ -45,7 +45,7 @@ const PrintableNote: React.FC<PrintableNoteProps> = ({
 
   return (
     <div className="p-6 max-w-2xl mx-auto bg-white rounded shadow">
-      {/* Your existing component JSX */}
+      {/* Su componente existente JSX */}
       <button onClick={handlePrint}>{buttonLabel}</button>
     </div>
   );
