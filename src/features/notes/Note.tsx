@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 // Definir tipos explícitos para las props
 interface NoteProps {
-  noteId: string;  // `noteId` es un string
+  noteId: string; // `noteId` es un string
 }
 
 const Note = ({ noteId }: NoteProps) => {
@@ -38,7 +38,7 @@ const Note = ({ noteId }: NoteProps) => {
         <td className="table__cell note__username">{note.username}</td>
         <td className="table__cell note__edit">
           <button className="icon-button table__button" onClick={handleEdit}>
-          <FontAwesomeIcon icon={faPenToSquare} />
+            <FontAwesomeIcon icon={faPenToSquare} />
           </button>
         </td>
       </tr>
@@ -56,8 +56,10 @@ export const NotePrintContent = ({ note }: { note: any }) => {
     <div id={`note-content-${note._id}`} className="note-print hidden">
       <h2>{note.title}</h2>
       <p>{note.text}</p>
-      <small>Creada: {created}</small><br />
-      <small>Actualizada: {updated}</small><br />
+      <small>Creada: {created}</small>
+      <br />
+      <small>Actualizada: {updated}</small>
+      <br />
       <small>Autor: {note.username}</small>
       <hr />
     </div>

@@ -21,7 +21,7 @@ interface RefreshResponse {
 
 // 2. Base query con tipos explícitos
 const baseQuery = fetchBaseQuery({
-  baseUrl: "http://localhost:3500",
+  baseUrl: "https://servidor-7zli.onrender.com", //Cambiar según el servidor utilizado.
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth.token;
@@ -43,21 +43,21 @@ const baseQueryWithReauth = async (
   // Verificación de error de autenticación
   if (result?.error?.status === 401 || result?.error?.status === 403) {
     console.log("Token expirado, intentando refrescar...");
-    
+
     // Intento de refrescar el token
-    const refreshResult = await baseQuery('/auth/refresh', api, extraOptions);
-    
+    const refreshResult = await baseQuery("/auth/refresh", api, extraOptions);
+
     if (refreshResult?.data) {
       // Almacena el nuevo token
       const refreshData = refreshResult.data as RefreshResponse;
       api.dispatch(setCredentials({ accessToken: refreshData.accessToken }));
-      
+
       // Reintenta la consulta original con el nuevo token
       result = await baseQuery(args, api, extraOptions);
     } else {
       // Fallo al refrescar - logout
       api.dispatch(logOut(undefined)); // Pasar undefined como payload
-      window.location.href = '/login';
+      window.location.href = "/login";
       return refreshResult;
     }
   }
@@ -68,6 +68,6 @@ const baseQueryWithReauth = async (
 // 4. Creación del API slice
 export const apiSlice = createApi({
   baseQuery: baseQueryWithReauth,
-  tagTypes: ['Note', 'User'],
+  tagTypes: ["Note", "User"],
   endpoints: () => ({}), // Endpoints vacíos que se inyectarán en otros slices
 });

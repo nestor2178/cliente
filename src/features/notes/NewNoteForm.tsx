@@ -23,12 +23,20 @@ const NewNoteForm: React.FC<NewNoteFormProps> = ({ users }) => {
   const [text, setText] = useState("");
   const [userId, setUserId] = useState(users[0]?.id || "");
 
-  const TITLE_REGEX = /^[A-z0-9\s!@#$%.,?]{3,60}$/;
-  const TEXT_REGEX = /^[A-z0-9\s!@#$%.,?():"'/-]{10,1000}$/;
+  const TITLE_REGEX = /^[\w\sáéíóúüñÁÉÍÓÚÜÑ!@#$%.,?"'<>\/\\=\-():]{3,70}$/;
+  const TEXT_REGEX =
+    /^[\w\sáéíóúüñÁÉÍÓÚÜÑ!@#$%.,?"'<>\/\\=\-():[\]{}*+^%$#@!|`~\n\r\t=.,;]{10,1300}$/;
 
   const [validTitle, setValidTitle] = useState(false);
   const [validText, setValidText] = useState(false);
 
+  useEffect(() => {
+    setValidTitle(TITLE_REGEX.test(title));
+  }, [title]);
+
+  useEffect(() => {
+    setValidText(TEXT_REGEX.test(text));
+  }, [text]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -40,16 +48,8 @@ const NewNoteForm: React.FC<NewNoteFormProps> = ({ users }) => {
   }, [isSuccess, navigate, users]);
 
   useEffect(() => {
-    setValidTitle(TITLE_REGEX.test(title));
-  }, [title]);
-
-  useEffect(() => {
-    setValidText(TEXT_REGEX.test(text));
-  }, [text]);
-
-  useEffect(() => {
     if (isError) {
-      console.error('Error al crear la nota:', error);
+      console.error("Error al crear la nota:", error);
     }
   }, [isError, error]);
 
@@ -77,28 +77,23 @@ const NewNoteForm: React.FC<NewNoteFormProps> = ({ users }) => {
 
   const errClass = isError ? "errmsg" : "offscreen";
   let errMsg = "";
-  if (error) {
-    if ("data" in error) {
-      const fetchError = error as FetchBaseQueryError;
-      if (
-        fetchError.data &&
-        typeof fetchError.data === "object" &&
-        "message" in fetchError.data
-      ) {
-        errMsg = (fetchError.data as { message: string }).message;
-      }
-    } else if ("message" in error) {
-      errMsg = (error as { message: string }).message;
+  if (error && "data" in error) {
+    const fetchError = error as FetchBaseQueryError;
+    if (
+      fetchError.data &&
+      typeof fetchError.data === "object" &&
+      "message" in fetchError.data
+    ) {
+      errMsg = (fetchError.data as { message: string }).message;
     }
   }
 
-  const validTitleClass = !title ? "form__input--incomplete" : "";
-  const validTextClass = !text ? "form__input--incomplete" : "";
+  const validTitleClass = !validTitle && title ? "form__input--incomplete" : "";
+  const validTextClass = !validText && text ? "form__input--incomplete" : "";
 
   return (
     <>
       <p className={errClass}>{errMsg}</p>
-
       <form className="form" onSubmit={onSaveNoteClicked}>
         <div className="form__title-row">
           <h2>Nueva Nota</h2>
@@ -108,47 +103,42 @@ const NewNoteForm: React.FC<NewNoteFormProps> = ({ users }) => {
             </button>
           </div>
         </div>
-        <label className="form__label" htmlFor="title">
-  Título:
-  {!validTitle && (
-    <span className="form__error">
-      {" "}
-      [3-60 caracteres. Solo letras, números y espacios]
-    </span>
-  )}
-</label>
-<input
-  className={`form__input ${validTitleClass}`}
-  id="title"
-  name="title"
-  type="text"
-  autoComplete="off"
-  value={title}
-  onChange={onTitleChanged}
-  minLength={3}
-  maxLength={60}
-  required
-/>
-        <label className="form__label" htmlFor="text">
-  Texto:
-  {!validText && (
-    <span className="form__error">
-      {" "}
-      [10-1000 caracteres. Permitidos: letras, números, espacios, !@#$%.,?"'-()]
-    </span>
-  )}
-</label>
-<textarea
-  className={`form__input form__input--text ${validTextClass}`}
-  id="text"
-  name="text"
-  value={text}
-  onChange={onTextChanged}
-  minLength={10}
-  maxLength={1000}
-  required
-/>
 
+        <label className="form__label" htmlFor="title">
+          Título:
+          {!validTitle && (
+            <span className="form__error">
+              [3-70 caracteres. Letras, números y símbolos técnicos]
+            </span>
+          )}
+        </label>
+        <input
+          className={`form__input ${validTitleClass}`}
+          id="title"
+          name="title"
+          type="text"
+          autoComplete="off"
+          value={title}
+          onChange={onTitleChanged}
+          required
+        />
+
+        <label className="form__label" htmlFor="text">
+          Texto:
+          {!validText && (
+            <span className="form__error">
+              [10-1300 caracteres. Se permiten símbolos de código]
+            </span>
+          )}
+        </label>
+        <textarea
+          className={`form__input form__input--text ${validTextClass}`}
+          id="text"
+          name="text"
+          value={text}
+          onChange={onTextChanged}
+          required
+        />
 
         <label className="form__label" htmlFor="username">
           ASIGNADO A:
@@ -156,12 +146,13 @@ const NewNoteForm: React.FC<NewNoteFormProps> = ({ users }) => {
         <select
           id="username"
           name="username"
-          className={"form__select ${validTextClass}"}
+          className="form__select"
           value={userId}
           onChange={onUserIdChanged}
         >
           {options}
         </select>
+
         {isLoading && <p>Cargando...</p>}
       </form>
     </>
