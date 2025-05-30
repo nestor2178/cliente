@@ -25,7 +25,7 @@ const NewNoteForm: React.FC<NewNoteFormProps> = ({ users }) => {
 
   const TITLE_REGEX = /^[\w\sáéíóúüñÁÉÍÓÚÜÑ!@#$%.,?"'<>\/\\=\-():]{3,70}$/;
   const TEXT_REGEX =
-    /^[\w\sáéíóúüñÁÉÍÓÚÜÑ!@#$%.,?"'<>\/\\=\-():[\]{}*+^%$#@!|`~\n\r\t=.,;]{10,1300}$/;
+    /^[\w\sáéíóúüñÁÉÍÓÚÜÑ!@#<span class="math-inline">%\.,?"'<\>\\/\\\\\=\\\-\(\)\:\[\\\]\{\}\*\+^%</span>#@!|`~&\n\r\t=.,;]{10,1300}$/;
 
   const [validTitle, setValidTitle] = useState(false);
   const [validText, setValidText] = useState(false);

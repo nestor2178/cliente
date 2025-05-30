@@ -46,7 +46,7 @@ const AdvancedSearch: React.FC = () => {
         criteria as Record<string, string>
       ).toString();
       const response = await fetch(
-        `https://servidor-7zli.onrender.com/notes/search?${query}`, //Cambiar según el servidor utilizado*.
+        `http://localhost:3500/notes/search?${query}`, //Cambiar según el servidor utilizado*.
         {
           method: "GET",
           headers: {
@@ -102,10 +102,7 @@ const AdvancedSearch: React.FC = () => {
         <thead className="table__thead">
           <tr>
             <th scope="col">Estado</th>
-            <th scope="col">Creada</th>
-            <th scope="col">Actualizada</th>
-            <th scope="col">Título</th>
-            <th scope="col">Dueño</th>
+            <th scope="col">Nota</th>
             <th scope="col">Editar</th>
           </tr>
         </thead>

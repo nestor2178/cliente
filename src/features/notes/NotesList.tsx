@@ -100,11 +100,8 @@ const NotesList = () => {
         <thead className="table__thead">
           <tr>
             <th className="table__th">Estado</th>
-            <th className="table__th">Creada</th>
-            <th className="table__th">Actualizada</th>
-            <th className="table__th">Título</th>
-            <th className="table__th">Dueño</th>
-            <th className="table__th">Acciones</th>
+            <th className="table__th">Nota</th>
+            <th className="table__th">Editar</th>
           </tr>
         </thead>
         <tbody>{tableContent}</tbody>
