@@ -53,7 +53,7 @@ const AdvancedSearch: React.FC = () => {
       const query = new URLSearchParams(filteredCriteria).toString();
 
       const response = await fetch(
-        `http://localhost:3500/notes/search?${query}`,
+        `https://servidor-7zli.onrender.com/notes/search?${query}`,
         {
           method: "GET",
           headers: {
