@@ -70,7 +70,7 @@ body {
   min-height: 100vh;
   background-color: var(--BGCOLOR);
   color: var(--COLOR);
-  background-image: url("./img/background.jpg");
+  background-image: url("/img/background.jpg");
   background-size: cover;
   background-position: top right;
   background-blend-mode: multiply;
@@ -330,10 +330,12 @@ tr {
 /* Diseño general de contenedores */
 .advanced-search {
   padding: 2rem 1rem;
-  background-image: url("/background.jpg");
+  background-image: url("/img/background.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  background-color: var(--BGCOLOR);
+  background-blend-mode: multiply;
   color: var(--COLOR);
   display: flex;
   flex-direction: column;
