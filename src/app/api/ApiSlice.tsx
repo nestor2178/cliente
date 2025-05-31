@@ -21,7 +21,7 @@ interface RefreshResponse {
 
 // 2. Base query con tipos explícitos
 const baseQuery = fetchBaseQuery({
-  baseUrl: "http://localhost:3500", //Cambiar según el servidor utilizado.
+  baseUrl: "https://servidor-7zli.onrender.com", //Cambiar según el servidor utilizado.
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth.token;
