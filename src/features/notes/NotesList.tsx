@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { memo } from "react";
-import { NotePrintContent } from "./Note";
+// La importación de NotePrintContent se ha eliminado
 
 const NotesList = () => {
   const { data: notes, error, isLoading } = useGetNotesQuery("notesList");
@@ -107,12 +107,7 @@ const NotesList = () => {
         <tbody>{tableContent}</tbody>
       </table>
 
-      {/* Contenido oculto para impresión */}
-      <div className="print-area hidden">
-        {notesForPrint.map((note) => (
-          <NotePrintContent key={note._id} note={note} />
-        ))}
-      </div>
+      {/* El contenido oculto para impresión ha sido eliminado */}
     </div>
   );
 };

@@ -42,11 +42,18 @@ const AdvancedSearch: React.FC = () => {
     setErrorMessage("");
 
     try {
-      const query = new URLSearchParams(
-        criteria as Record<string, string>
-      ).toString();
+      // Filtrar criterios vacíos antes de construir la query
+      const filteredCriteria = Object.entries(criteria)
+        .filter(([_, value]) => value !== "")
+        .reduce((acc, [key, value]) => {
+          acc[key] = value;
+          return acc;
+        }, {} as Record<string, string>);
+
+      const query = new URLSearchParams(filteredCriteria).toString();
+
       const response = await fetch(
-        `http://localhost:3500/notes/search?${query}`, //Cambiar según el servidor utilizado*.
+        `http://localhost:3500/notes/search?${query}`,
         {
           method: "GET",
           headers: {
@@ -96,31 +103,30 @@ const AdvancedSearch: React.FC = () => {
     <div className="advanced-search">
       <h1>Búsqueda Avanzada</h1>
       <SearchForm onSearch={handleSearch} />
+
       {isLoading && <p>Cargando resultados...</p>}
       {errorMessage && <p className="error">{errorMessage}</p>}
-      <table className="table table--notes">
-        <thead className="table__thead">
-          <tr>
-            <th scope="col">Estado</th>
-            <th scope="col">Nota</th>
-            <th scope="col">Editar</th>
-          </tr>
-        </thead>
-        <tbody>
-          {searchResults.length > 0 ? (
-            searchResults.map((note) => (
-              <NoteComponent key={note._id} noteId={note._id} />
-            ))
-          ) : (
+
+      {!isLoading && searchResults.length === 0 && !errorMessage && (
+        <p>No se encontraron notas para los criterios especificados.</p>
+      )}
+
+      {searchResults.length > 0 && (
+        <table className="table table--notes">
+          <thead className="table__thead">
             <tr>
-              <td colSpan={6}>
-                {errorMessage ||
-                  "No se encontraron notas para los criterios especificados."}
-              </td>
+              <th scope="col">Estado</th>
+              <th scope="col">Nota</th>
+              <th scope="col">Editar</th>
             </tr>
-          )}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {searchResults.map((note) => (
+              <NoteComponent key={note._id} noteId={note._id} />
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 };
